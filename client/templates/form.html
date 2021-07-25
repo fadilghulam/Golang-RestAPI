@@ -1,0 +1,29 @@
+  <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Basic Form</title>
+  </head>
+  <body>
+    <h1>Basic Form Page</h1>
+    <form
+      enctype="multipart/form-data"
+      action="http://localhost:9998/login"
+      method="post"
+    >
+      <input type="text" id="test1" name="username" placeholder="username" />
+      <br><br>
+      <input type="password" id="test2" name="password" placeholder="password" />
+      <br><br>
+      <!--<input type="file" name="myFile" />-->
+      <input type="submit" value="submit" />
+    </form>
+
+    {{if .}}
+      <ul>
+        <li>
+          Username: {{.username}}
+        </li>
+      </ul>
+    {{end}}
+  </body>
+</html>

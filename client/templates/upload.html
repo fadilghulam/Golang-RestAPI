@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Basic Form</title>
+  </head>
+  <body>
+    <h1>Basic Upload Page</h1><br>
+    <br>
+    {{if .}}
+    <h3>Selamat Datang {{.username}}</h3>
+    {{end}}
+    <form
+      enctype="multipart/form-data"
+      action="http://localhost:9998/upload"
+      method="post"
+    >
+      <input type="file" id="test1" name="uploadfile" />
+      <br><br>
+      <!-- <input type="password" id="test2" name="password" placeholder="password" />
+      <br><br> -->
+      <!--<input type="file" name="myFile" />-->
+      <input type="submit" value="submit" />
+    </form>
+
+    <!-- {{if .}}
+      <ul>
+        <li>
+          Username: {{.username}}
+        </li>
+      </ul>
+    {{end}} -->
+  </body>
+</html>
