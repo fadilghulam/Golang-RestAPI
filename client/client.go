@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"text/template"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -216,7 +215,6 @@ func main() {
 	} else {
 		log.Println("Connection Success")
 	}
-	tpl = template.Must(template.ParseGlob("templates/*.html"))
 
 	handleRequests()
 
