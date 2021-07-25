@@ -52,40 +52,9 @@ func main() {
 	handleRequests()
 }
 
-func isAuthorized(endpoint func(http.ResponseWriter, *http.Request)) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		if r.Header["Token"] != nil {
-			token, err := jwt.Parse(r.Header["Token"][0], func(token *jwt.Token) (interface{}, error) {
-				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-					return nil, fmt.Errorf("There was an error")
-				}
-				return mySigningKey, nil
-			})
-
-			if err != nil {
-				fmt.Fprintf(w, err.Error())
-			}
-
-			if token.Valid {
-				endpoint(w, r)
-			}
-
-		} else {
-			fmt.Fprintf(w, "Not Authorized")
-		}
-	})
-}
-
 func handleRequests() {
-	log.Println("Start the development server at http://127.0.0.1:9999")
 
 	myRouter := mux.NewRouter().StrictSlash(true)
-
-	myRouter.Handle("/", isAuthorized(homePage))
-	// myRouter.HandleFunc("/login", Login)
-	// myRouter.HandleFunc("/home", Home)
-	// myRouter.HandleFunc("/refresh", Refresh)
 	myRouter.HandleFunc("/api/products", createProduct).Methods("POST")
 	myRouter.HandleFunc("/api/products", getProducts).Methods("GET")
 	myRouter.HandleFunc("/api/products/{id}", getProduct).Methods("GET")
@@ -93,10 +62,6 @@ func handleRequests() {
 	myRouter.HandleFunc("/api/products/{id}", deleteProduct).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":9999", myRouter))
-}
-
-func homePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome!")
 }
 
 func createProduct(w http.ResponseWriter, r *http.Request) {

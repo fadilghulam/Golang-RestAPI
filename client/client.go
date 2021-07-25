@@ -52,8 +52,6 @@ type Image struct {
 var db *gorm.DB
 var err error
 
-var tpl *template.Template
-
 func Login(w http.ResponseWriter, r *http.Request) {
 
 	var credentials Credentials
@@ -98,37 +96,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		})
 
 	http.Redirect(w, r, "/", http.StatusFound)
-}
-
-func UploadImage(w http.ResponseWriter, r *http.Request) {
-	r.ParseMultipartForm(10 << 20)
-	file, handler, err := r.FormFile("uploadfile")
-
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	defer file.Close()
-
-	fmt.Println("File Info")
-	fmt.Println("File Name: " + handler.Filename)
-	fmt.Println("File Size: ", handler.Size)
-	fmt.Println("File Type: ", handler.Header.Get("Content-Type"))
-
-	//Upload file
-	tempFile, err2 := ioutil.TempFile("uploads", "upload-*.jpg")
-	if err2 != nil {
-		fmt.Println(err2)
-	}
-	defer tempFile.Close()
-
-	fileBytes, err3 := ioutil.ReadAll(file)
-	if err3 != nil {
-		fmt.Println(err3)
-	}
-
-	tempFile.Write(fileBytes)
-	fmt.Println("Done")
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
@@ -182,10 +149,6 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func homePage(w http.ResponseWriter, r *http.Request) {
-	tpl.ExecuteTemplate(w, "upload.html", nil)
-}
-
 func Home(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("token")
 	if err != nil {
@@ -235,11 +198,9 @@ func handleRequests() {
 
 	myRouter := mux.NewRouter().StrictSlash(true)
 
-	myRouter.HandleFunc("/", homePage)
 	myRouter.HandleFunc("/login", Login)
 	myRouter.HandleFunc("/home", Home)
 	myRouter.HandleFunc("/logout", ClearSession)
-	myRouter.HandleFunc("/upload", UploadImage)
 	myRouter.HandleFunc("/register", Register).Methods("POST")
 
 	log.Fatal(http.ListenAndServe(":9998", myRouter))
